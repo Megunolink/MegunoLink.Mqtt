@@ -1,0 +1,26 @@
+MqttManager	KEYWORD1
+OnNetworkConnected	KEYWORD2
+OnNetworkConnectionLost	KEYWORD2
+IsMqttConnected	KEYWORD2
+UpdateDeviceId	KEYWORD2
+BuildStreamTopic	KEYWORD2
+BuildTopic	KEYWORD2
+SubscribeToConnect	KEYWORD2
+SubscribeToDisconnect	KEYWORD2
+SubscribeToMessage	KEYWORD2
+SubscribeToDeviceIdChanged	KEYWORD2
+
+MqttCommandHandler	KEYWORD1
+
+MegunoLinkMqtt	KEYWORD1
+GetTimePlot	KEYWORD2
+GetXYPlot	KEYWORD2
+GetInterfacePanel	KEYWORD2
+GetMap	KEYWORD2
+GetMessage	KEYWORD2
+GetTable	KEYWORD2
+GetRecordTable	KEYWORD2
+GetMonkey	KEYWORD2
+GetReport	KEYWORD2
+GetAudio	KEYWORD2
+GetPushover	KEYWORD2

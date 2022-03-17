@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{48d580cc-8559-4248-b96b-25e8eaa28500}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)keywords.txt" />
+    <Text Include="$(MSBuildThisFileDirectory)readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory).gitattributes" />
+    <None Include="$(MSBuildThisFileDirectory).gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)examples\CommandProcessing\CommandProcessing.ino" />
+    <None Include="$(MSBuildThisFileDirectory)library.properties" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\MegunoLinkMqtt.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\MqttManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\utility\MqttParser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\MegunoLinkMqtt.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\MqttCommandHandler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\MqttManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\utility\MqttParser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)templates\MqttConfig.h" />
+  </ItemGroup>
+</Project>
