@@ -1,64 +1,65 @@
-﻿/* ***********************************************************************
-*  This example demonstrates processing commands received from a Mqtt
-*  server on an ESP8266 or ESP32 board using our Arduino MegunoLink.Mqtt 
-*  library. It extendes the classic Arduino blink example with commands
-*  to control the blink rate. Find the MegunoLink project file 
-*  (Command Processing.mlpz) that goes with this example in the same 
-*  folder as the Arduino code file. 
-* 
-*  You'll need to install MegunoLink's Arduino library to use this example:
-*       https://www.megunolink.com/documentation/getting-started/arduino-integration/
-*  And the following 3rd party libraries:
-*     - PangolinMQTT (https://github.com/philbowles/PangolinMQTT)
-*     - AsyncTCP (https://github.com/philbowles/AsyncTCP) --- for ESP32 boards
-*     - ESPAsyncTCP (https://github.com/philbowles/AsyncTCP) --- for ESP8266 boards
-*
-*  For more information:
-*     Getting started building Arduino interfaces
-*       https://www.megunolink.com/documentation/getting-started/build-arduino-interface/
-*     Getting started processing serial commands
-*       https://www.megunolink.com/documentation/getting-started/processing-serial-commands/
-*     Interface panel reference
-*       https://www.megunolink.com/documentation/interface-panel/
-*
-*  The following serial commands are supported:
-*       !OnTime n\r\n
-*         Sets the amount of time the LED remains on to n [milliseconds]
-*
-*       !OffTime n\r\n
-*         Sets the amount of time the LED remains off to n [milliseconds]
-*
-*       !ListAll\r\n
-*         Lists current blink parameters & sends them to the interface panel.
-* 
-*  See: https://github.com/Megunolink/MegunoLink.Mqtt
-*  *********************************************************************** */
+/* ***********************************************************************
+ *  This example demonstrates processing commands received from a Mqtt
+ *  server on an ESP8266 or ESP32 board using our Arduino MegunoLink.Mqtt 
+ *  library. It extendes the classic Arduino blink example with commands
+ *  to control the blink rate. Find the MegunoLink project file 
+ *  (Command Processing.mlpz) that goes with this example in the same 
+ *  folder as the Arduino code file. 
+ * 
+ *  You'll need to install MegunoLink's Arduino library to use this example:
+ *       https://www.megunolink.com/documentation/getting-started/arduino-integration/
+ *  And the following 3rd party libraries:
+ *     - PangolinMQTT (https://github.com/philbowles/PangolinMQTT)
+ *     - AsyncTCP (https://github.com/philbowles/AsyncTCP) --- for ESP32 boards
+ *     - ESPAsyncTCP (https://github.com/philbowles/AsyncTCP) --- for ESP8266 boards
+ *
+ *  For more information:
+ *     Getting started building Arduino interfaces
+ *       https://www.megunolink.com/documentation/getting-started/build-arduino-interface/
+ *     Getting started processing serial commands
+ *       https://www.megunolink.com/documentation/getting-started/processing-serial-commands/
+ *     Interface panel reference
+ *       https://www.megunolink.com/documentation/interface-panel/
+ *
+ *  The following serial commands are supported:
+ *       !OnTime n\r\n
+ *         Sets the amount of time the LED remains on to n [milliseconds]
+ *
+ *       !OffTime n\r\n
+ *         Sets the amount of time the LED remains off to n [milliseconds]
+ *
+ *       !ListAll\r\n
+ *         Lists current blink parameters & sends them to the interface panel.
+ * 
+ *  See: https://github.com/Megunolink/MegunoLink.Mqtt
+ *********************************************************************** */
+
+#include <Arduino.h>
 
 #if defined(ARDUINO_ARCH_ESP8266)
 #include <ESP8266WiFi.h>
 #include "ESPAsyncTCP.h"
 #elif defined(ARDUINO_ARCH_ESP32)
-//#include "WiFi.h"
-//#include "AsyncTCP.h"
+#include "WiFi.h"
+#include "AsyncTCP.h"
 #else
 #pragma error('Unsupported architecture. Contact us for more information: www.MegunoLink.com')
 #endif
 
 #include "MqttCommandHandler.h"
 #include "CommandHandler.h"
+
 #include "EspTicker.h"
 #include "PangolinMQTT.h"
 
 // -------------------------------------------------
-// Setup WiFi and Mqtt credentials (SSID, Mqtt broker, 
-// usernames and passwords). 
-//#define USE_CONFIG_FILES // Comment out this line to use Option 2 below
+// Setup credentials. 
+#define USE_CONFIG_FILES // Comment out this line to use Option 2 below
 #if defined(USE_CONFIG_FILES)
 
 // Include SSID and password from a library file. See:
 // https://www.megunolink.com/articles/wireless/how-do-i-connect-to-a-wireless-network-with-the-esp32/
 #include "WiFiConfig.h"
-#include "MqttConfig.h"
 
 #else
 
@@ -66,12 +67,14 @@
 const char* SSID = "Your SSID";
 const char* WiFiPassword = "Your Password";
 
-const IPAddress MqttServer(192, 168, 15, 10);
-const uint16_t MqttPort = 1883;
-const char* MqttUser = "MqttServerUserName";
-const char* MqttPass = "MqttServerPassword";
-
 #endif
+
+// Mqtt server/credentials
+const char* MqttServer = "test.mosquitto.org";
+const uint16_t MqttPort = 1884;
+const char* MqttUser = "rw";
+const char* MqttPass = "readwrite";
+
 
 // -------------------------------------------------
 // Blink variables that control the blink interval 
@@ -149,6 +152,36 @@ void SetupCommands()
 const int WiFiReconnectDelay = 5; // seconds
 EspTicker g_tmrWifiReconnect;
 
+void ConnectToWifi()
+{
+  WiFi.begin(SSID, WiFiPassword);
+}
+
+void WiFi_GotIP()
+{
+  Serial.print("My IP address: ");
+  Serial.println(WiFi.localIP());
+  Serial.flush();
+
+  // Let the Mqtt manager know that that a 
+  // network connection is now available
+  // so it can connect to the Mqtt broker. 
+  g_MQTTClient.OnNetworkConnected();
+}
+
+void WiFi_Disconnected(uint8_t uReason)
+{
+  Serial.println("WiFi lost connection: ");
+  Serial.println(uReason); Serial.flush();
+
+  g_tmrWifiReconnect.once(WiFiReconnectDelay, ConnectToWifi);
+
+  // Let the Mqtt manager know we've lost our 
+  // network connection so it doesn't try 
+  // reconnecting ot the Mqtt broker. 
+  g_MQTTClient.OnNetworkConnectionLost();
+}
+
 void SetupWiFi()
 {
   WiFi.mode(WIFI_STA);
@@ -183,35 +216,7 @@ void SetupWiFi()
 #endif
 }
 
-void ConnectToWifi()
-{
-  WiFi.begin(SSID, WiFiPassword);
-}
 
-void WiFi_GotIP()
-{
-  Serial.print("My IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.flush();
-
-  // Let the Mqtt manager know that that a 
-  // network connection is now available
-  // so it can connect to the Mqtt broker. 
-  g_MQTTClient.OnNetworkConnected();
-}
-
-void WiFi_Disconnected(uint8_t uReason)
-{
-  Serial.println("WiFi lost connection: ");
-  Serial.println(uReason); Serial.flush();
-
-  g_tmrWifiReconnect.once(WiFiReconnectDelay, ConnectToWifi);
-
-  // Let the Mqtt manager know we've lost our 
-  // network connection so it doesn't try 
-  // reconnecting ot the Mqtt broker. 
-  g_MQTTClient.OnNetworkConnectionLost();
-}
 
 // -------------------------------------------------
 // Setup
@@ -232,7 +237,11 @@ void setup()
   Serial.begin(115200);
   Serial.println(F("Mqtt Blink 2.0"));
   Serial.print(F("Built: ")); Serial.println(F(__TIMESTAMP__));
-  g_MQTTClient.PrintDeviceId();
+
+  // A device id will be created automatically from the micro's
+  // chip id if one isn't supplied. Here we set an id to match
+  // the device id selected in the MegunoLink test project. 
+  g_MQTTClient.SetDeviceId("test");
 
   SetupWiFi();
   SetupMqtt();
@@ -253,7 +262,7 @@ void loop()
   // Update the LED
   uint32_t uNow = millis();
   bool bOn = (uNow - LastBlink) < OnTime;
-  digitalWrite(LED_BUILTIN, bOn ? HIGH : LOW);
+  digitalWrite(LED_BUILTIN, bOn ? LOW : HIGH);
   if ((uNow - LastBlink) > (OnTime + OffTime))
   {
     LastBlink = uNow;
