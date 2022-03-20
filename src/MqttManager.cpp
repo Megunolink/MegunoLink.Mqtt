@@ -41,7 +41,7 @@ void MqttManager::OnNetworkConnectionLost()
   m_tmrMqttReconnect.detach();
 }
 
-void MqttManager::UpdateDeviceId(const char* pchDeviceId)
+void MqttManager::SetDeviceId(const char* pchDeviceId)
 {
   PublishStatus(Status_Offline);
 

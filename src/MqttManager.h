@@ -1,5 +1,9 @@
 #pragma once
-#include "PangolinMQTT/src/PangolinMQTT.h"
+
+#if !defined(PangolinMQTT)
+#include "PangolinMQTT.h"
+#endif
+
 #include "EspTicker.h"
 
 #include <vector>
@@ -60,7 +64,7 @@ public:
 
   bool IsMqttConnected() const { return m_bMqttConnected; }
 
-  void UpdateDeviceId(char const* pchDeviceId);
+  void SetDeviceId(char const* pchDeviceId);
   void PrintDeviceId();
 
   std::string BuildStreamTopic() const;

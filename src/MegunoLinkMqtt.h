@@ -1,8 +1,8 @@
 #pragma once
 
 #include "MegunoLink.h"
-#include "utility/MLPMsgBuffer.h"
-#include "utility/MegunoLinkBufferWrapper.h"
+#include "MLPMsgBuffer.h"
+#include "MegunoLinkBufferWrapper.h"
 
 #include "MqttManager.h"
 

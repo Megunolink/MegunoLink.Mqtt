@@ -20,7 +20,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory).gitattributes" />
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
-    <None Include="$(MSBuildThisFileDirectory)examples\CommandProcessing\CommandProcessing.ino" />
+    <None Include="$(MSBuildThisFileDirectory)examples\PlottingData\PlottingData.ino" />
     <None Include="$(MSBuildThisFileDirectory)library.properties" />
   </ItemGroup>
   <ItemGroup>

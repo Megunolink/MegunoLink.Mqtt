@@ -35,22 +35,24 @@
 *  *********************************************************************** */
 
 #if defined(ARDUINO_ARCH_ESP8266)
-#include "ESP8266WiFi.h"
+#include <ESP8266WiFi.h>
 #include "ESPAsyncTCP.h"
 #elif defined(ARDUINO_ARCH_ESP32)
-#include "WiFi.h"
-#include "AsyncTCP.h"
+//#include "WiFi.h"
+//#include "AsyncTCP.h"
 #else
 #pragma error('Unsupported architecture. Contact us for more information: www.MegunoLink.com')
 #endif
 
 #include "MqttCommandHandler.h"
+#include "CommandHandler.h"
 #include "EspTicker.h"
+#include "PangolinMQTT.h"
 
 // -------------------------------------------------
 // Setup WiFi and Mqtt credentials (SSID, Mqtt broker, 
 // usernames and passwords). 
-#define USE_CONFIG_FILES // Comment out this line to use Option 2 below
+//#define USE_CONFIG_FILES // Comment out this line to use Option 2 below
 #if defined(USE_CONFIG_FILES)
 
 // Include SSID and password from a library file. See:
@@ -95,7 +97,7 @@ MqttManager g_MQTTClient;
 // handlers share the same command library to save
 // memory. 
 MqttCommandHandler<> MqttCmds(g_MQTTClient);
-CommandProcessor<> SerialCmds(Cmds);
+CommandProcessor<> SerialCmds(MqttCmds);
 
 /// <summary>
 /// Called when the 'OnTime' command is received to set the time the LED remains on. 

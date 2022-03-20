@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <Stream.h>
 
-#include "utility/CommandDispatcherBase.h"
+#include "CommandDispatcherBase.h"
 #include "utility/MqttParser.h"
 
 template <int MAX_COMMANDS = 10, int MAX_VARIABLES = 10> class MqttCommandHandler 
