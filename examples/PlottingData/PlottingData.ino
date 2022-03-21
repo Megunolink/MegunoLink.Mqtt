@@ -47,10 +47,15 @@
 #define USE_CONFIG_FILES // Comment out this line to use Option 2 below
 #if defined(USE_CONFIG_FILES)
 
+// -------------------------------------------------
+// Setup credentials. 
+// https://www.megunolink.com/articles/wireless/how-do-i-connect-to-a-wireless-network-with-the-esp32/
+#define USE_CONFIG_FILES // Comment out this line to use Option 2 below
+#if defined(USE_CONFIG_FILES)
+
 // Include SSID and password from a library file. See:
 // https://www.megunolink.com/articles/wireless/how-do-i-connect-to-a-wireless-network-with-the-esp32/
 #include "WiFiConfig.h"
-#include "MqttConfig.h"
 
 #else
 
@@ -58,12 +63,17 @@
 const char* SSID = "Your SSID";
 const char* WiFiPassword = "Your Password";
 
-const IPAddress MqttServer(192, 168, 15, 10);
-const uint16_t MqttPort = 1883;
-const char* MqttUser = "MqttServerUserName";
-const char* MqttPass = "MqttServerPassword";
-
 #endif
+
+// Mqtt server/credentials
+// test.mosquitto.org is a public Mqtt broker freely available
+// for testing. Not recommended for production. See
+// https://test.mosquitto.org for more information. 
+const char* MqttServer = "test.mosquitto.org";
+const uint16_t MqttPort = 1884;
+const char* MqttUser = "rw";
+const char* MqttPass = "readwrite";
+
 
 // -------------------------------------------------
 // Communications 
@@ -165,8 +175,13 @@ void SetupMqtt()
 void setup()
 {
   Serial.begin(115200);
-  Serial.println(F("Mqtt Blink 2.0"));
+  Serial.println(F("Mqtt Plotting Example"));
   Serial.print(F("Built: ")); Serial.println(F(__TIMESTAMP__));
+
+  // A device id will be created automatically from the micro's
+  // chip id if one isn't supplied. Here we set an id to match
+  // the device id selected in the MegunoLink test project. 
+  g_MQTTClient.SetDeviceId("test");
   g_MQTTClient.PrintDeviceId();
 
   SetupWiFi();

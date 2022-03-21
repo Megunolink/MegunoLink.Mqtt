@@ -42,7 +42,11 @@
 #elif defined(ARDUINO_ARCH_ESP32)
 #include "WiFi.h"
 #include "AsyncTCP.h"
+#if !defined(LED_BUILTIN)
+#define LED_BUILTIN 2
+#endif
 #else
+
 #pragma error('Unsupported architecture. Contact us for more information: www.MegunoLink.com')
 #endif
 
@@ -70,6 +74,9 @@ const char* WiFiPassword = "Your Password";
 #endif
 
 // Mqtt server/credentials
+// test.mosquitto.org is a public Mqtt broker freely available
+// for testing. Not recommended for production. See
+// https://test.mosquitto.org for more information. 
 const char* MqttServer = "test.mosquitto.org";
 const uint16_t MqttPort = 1884;
 const char* MqttUser = "rw";
@@ -242,6 +249,7 @@ void setup()
   // chip id if one isn't supplied. Here we set an id to match
   // the device id selected in the MegunoLink test project. 
   g_MQTTClient.SetDeviceId("test");
+  g_MQTTClient.PrintDeviceId();
 
   SetupWiFi();
   SetupMqtt();
