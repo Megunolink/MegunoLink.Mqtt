@@ -42,12 +42,6 @@
 #include "EspTicker.h"
 
 // -------------------------------------------------
-// Setup WiFi and Mqtt credentials (SSID, Mqtt server, 
-// usernames and passwords). 
-#define USE_CONFIG_FILES // Comment out this line to use Option 2 below
-#if defined(USE_CONFIG_FILES)
-
-// -------------------------------------------------
 // Setup credentials. 
 // https://www.megunolink.com/articles/wireless/how-do-i-connect-to-a-wireless-network-with-the-esp32/
 #define USE_CONFIG_FILES // Comment out this line to use Option 2 below
@@ -186,7 +180,6 @@ void setup()
 
   SetupWiFi();
   SetupMqtt();
-  SetupCommands();
 
   ConnectToWifi();
 }
@@ -196,8 +189,6 @@ void setup()
 // Main loop
 void loop()
 {
-  SerialCmds.Process();
-
   static ArduinoTimer tmrPlot;
   if (g_MQTTClient.IsMqttConnected() && tmrPlot.TimePassed_Milliseconds(500))
   {
