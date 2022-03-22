@@ -23,6 +23,7 @@
     <None Include="$(MSBuildThisFileDirectory)examples\CommandProcessing\CommandProcessing.ino" />
     <None Include="$(MSBuildThisFileDirectory)examples\PlottingData\PlottingData.ino" />
     <None Include="$(MSBuildThisFileDirectory)library.properties" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\MegunoLinkMqtt.cpp" />
