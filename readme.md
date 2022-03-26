@@ -3,12 +3,12 @@ This Arduino library implements support for sending data and commands to MegunoL
 
 # Installation
 This library requires:
-* [PangolinMQTT](https://github.com/philbowles/PangolinMQTT)
+* [PangolinMQTT](https://github.com/philbowles/PangolinMQTT/tree/v1.0.0)
 * [AsyncTCP](https://github.com/philbowles/AsyncTCP) (for ESP32 boards)
-* [ESPAsyncTCP](https://github.com/philbowles/AsyncTCP) (for ESP8266 boards)
+* [ESPAsyncTCP](https://github.com/philbowles/ESPAsyncTCP) (for ESP8266 boards)
 * [MegunoLink](https://github.com/Megunolink/MLP) core library.
 
-Download each of the above 3rd party libraries and put them into your Arduino libraries folder (typically `My Documents\Arduino\libraries`). The original AsyncTCP (https://github.com/me-no-dev/AsyncTCP) and ESPAsyncTCP (https://github.com/me-no-dev/ESPAsyncTCP) are a vast improvement over the standard Arduino libraries but include a couple of bugs that Phil Bowles fixed in the repositories referenced above. 
+Download each of the above 3rd party libraries and put them into your Arduino libraries folder (typically `My Documents\Arduino\libraries`). The original AsyncTCP (https://github.com/me-no-dev/AsyncTCP) and ESPAsyncTCP (https://github.com/me-no-dev/ESPAsyncTCP) are a vast improvement over the standard Arduino libraries but include a couple of bugs that Phil Bowles fixed in the repositories referenced above. We use the v1.0 release of the PangolinMQTT library because later versions rely on another library with a license that precludes commercial use. 
 
 You can use [MegunoLink's Ardunio integration setup](https://www.megunolink.com/documentation/install/arduino-integration-setup/) tool to install the [MegunoLink](https://github.com/Megunolink/MLP) core library.
 
